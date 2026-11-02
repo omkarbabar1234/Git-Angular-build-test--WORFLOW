@@ -1,0 +1,29 @@
+name: Build with job concurrency
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: app with concurrency in it
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: deploy-app
+      cancel-in-progress: true
+
+    steps:
+      - name: checkout the registry background
+        uses: actions/checkout@v7
+
+      - name: download the node version
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 22.x
+
+      - name: install dependencies
+        run: npm install
+
+      - name: build the app
+        run: npm run build
